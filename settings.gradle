@@ -1,0 +1,6 @@
+rootProject.name = 'refimpl'
+
+include ':sender'
+include ':receiver'
+
+

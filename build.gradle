@@ -1,0 +1,26 @@
+description = ''
+
+allprojects {
+    group = 'org.hl7.davinci.pdex.refimpl'
+    version = '0.0.1-SNAPSHOT'
+}
+
+subprojects {
+    //all our modules works on java, but container folders (e.g. payer2provider) should not have java plugin
+    if(file('build.gradle').exists()){
+        apply plugin: 'java'
+
+        repositories {
+            mavenLocal()
+            mavenCentral()
+        }
+
+        dependencies {
+            compileOnly 'org.projectlombok:lombok:1.18.6'
+            annotationProcessor 'org.projectlombok:lombok:1.18.8'
+        }
+
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+}

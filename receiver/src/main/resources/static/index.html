@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>HealthLX FHIR Alerts receiver demo app</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.0.6/vue-router.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.8.2/index.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.8.2/locale/en.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.8.2/theme-chalk/index.css">
+	<style>
+		body {
+			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+			margin: 0;
+		}
+		.hlx-logo {
+			float: right;
+		}
+		.hlx-logo > img {
+			float: right;
+			width: 40%;
+		}
+		#app {
+			min-height: 100vh;
+		}
+		.el-select {
+			width: 100%;
+		}
+  </style>
+</head>
+
+<body>
+
+	<template id="hlx-patient-form">
+		<el-table
+				:data="messages"
+				style="width: 100%">
+			<el-table-column
+					prop="content"
+					label="Message content">
+			</el-table-column>
+		</el-table>
+	</template>
+
+
+	<el-container id="app" width="320px">
+
+		<el-header>
+      <el-image src="da-vinci_logo.jpg" alt="Da Vinci"></el-image>
+		</el-header>
+
+		<el-main>
+			<el-row type="flex" justify="center">
+					<router-view></router-view>
+			</el-row>
+		</el-main>
+    <el-footer>
+      <el-image src="healthlx-logo.png" alt="HealthLX" class="hlx-logo"></el-image>
+    </el-footer>
+
+	</el-container>
+
+	<script type="text/javascript" src="app.js">
+	</script>
+</body>
+</html>
