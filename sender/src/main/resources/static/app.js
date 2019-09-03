@@ -18,6 +18,11 @@
 			data() {
 				return {
 					loading: false,
+					preview:{
+					    text: '',
+					    loaded: false,
+					    collapse: false
+					},
 					context: {
 						patient: {},
 						events: [],
@@ -48,31 +53,39 @@
 			},
 			methods: {
 				onChange() {
+                    if( this.context.channelTypeId && this.context.eventId && this.context.receiverUrl){
+                        this.query("/preview",response => {
+                            this.preview.text = response.data;
+                            this.preview.loaded = true;
+                        })
+                    }
 				},
 				submitForm() {
-					this.$refs.patientForm.validate(valid => {
-						if (!valid) {
-							return false;
-						} else {
-						this.loading = true;
-						var alertRequest = {
-						    patientId : this.context.patient.id,
-					        eventId: this.context.eventId,
-                            channelType: this.context.channelTypeId,
-                            receiverUrl: this.context.receiverUrl
-						};
-					        axios.post("/send-alert", alertRequest ).then(response => {
-                                this.$message.success(successMessage(response));
-                            }).catch(error => {
-                                this.$message.error(errorMessage(error.response.data.message));
-                            }).finally(() => {
-                                this.loading = false;
-                            });
-
-						}
-					});
-				}
-			}
+				    this.$refs.patientForm.validate(valid => {
+                        if (!valid) {
+                            return false;
+                        } else {
+                            this.query("/send-alert",response => { this.$message.success(successMessage(response))});
+                        }
+				    })
+				},
+				query(url, handler){
+                    this.loading = true;
+                    var alertRequest = {
+                        patientId : this.context.patient.id,
+                        eventId: this.context.eventId,
+                        channelType: this.context.channelTypeId,
+                        receiverUrl: this.context.receiverUrl
+                    };
+                    axios.post(url, alertRequest)
+                        .then(handler)
+                        .catch(error => {
+                            this.$message.error(errorMessage(error.response.data.message));
+                        }).finally(() => {
+                            this.loading = false;
+                        })
+                }
+            }
 		});
 
 		var router = new VueRouter({

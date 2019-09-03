@@ -34,51 +34,56 @@
 <body>
 
 	<template id="hlx-patient-form">
-		<el-form
-				ref="patientForm"
-				:rules="rules"
-				v-loading="loading"
-				:model="context"
-				label-width="120px"
-		>
-			<el-form-item label="Patient">
-				<el-input v-model="context.patient.name" :readonly="true"></el-input>
-			</el-form-item>
+		<div v-loading="loading">
+			<el-row type="flex" justify="center">
+				<el-col :span="8" :xs="16" :sm="16" :md="8">
+					<el-form
+							ref="patientForm"
+							:rules="rules"
+							:model="context"
+							label-width="120px">
 
-			<el-form-item label="Event" prop="eventId">
-				<el-select v-model="context.eventId" @change="onChange">
-					<el-option
-						v-for="event in context.events"
-						:label="event.name"
-						:value="event.id"></el-option>
-				</el-select>
-			</el-form-item>
+						<el-form-item label="Patient">
+							<el-input v-model="context.patient.name" :readonly="true"></el-input>
+						</el-form-item>
 
-			<el-form-item label="Channel type" prop="channelTypeId">
-				<el-select v-model="context.channelTypeId" @change="onChange">
-					<el-option
-							v-for="channelType in context.channelTypes"
-							:label="channelType.name"
-							:value="channelType.id"></el-option>
-				</el-select>
-			</el-form-item>
+						<el-form-item label="Event" prop="eventId">
+							<el-select v-model="context.eventId" @change="onChange">
+								<el-option
+										v-for="event in context.events"
+										:label="event.name"
+										:value="event.id"></el-option>
+							</el-select>
+						</el-form-item>
 
-			<el-form-item label="Receiver server">
-				<el-input v-model="context.receiverUrl"></el-input>
-			</el-form-item>
+						<el-form-item label="Channel type" prop="channelTypeId">
+							<el-select v-model="context.channelTypeId" @change="onChange">
+								<el-option
+										v-for="channelType in context.channelTypes"
+										:label="channelType.name"
+										:value="channelType.id"></el-option>
+							</el-select>
+						</el-form-item>
 
-			<el-form-item>
-				<el-button @click="submitForm" type="primary">Sent Alert</el-button>
-			</el-form-item>
+						<el-form-item label="Receiver server">
+							<el-input v-model="context.receiverUrl"></el-input>
+						</el-form-item>
 
-			<div>
-				You can visit demo receiver app <a th:href="@{${receiverApp}}">here.</a>
-			</div>
+						<el-form-item>
+							<el-button @click="submitForm" type="primary">Sent Alert</el-button>
+						</el-form-item>
 
-		</el-form>
+					</el-form>
+				</el-col>
+			</el-row>
 
+			<el-collapse v-if="preview.loaded" v-model="preview.collapse">
+				<el-collapse-item title="Message preview" name="1">
+					<div style="overflow-x:scroll;"><pre>{{ preview.text }}</pre></div>
+				</el-collapse-item>
+			</el-collapse>
+		</div>
 	</template>
-
 
 	<el-container id="app" width="320px">
 
@@ -87,13 +92,12 @@
 		</el-header>
 
 		<el-main>
-			<el-row type="flex" justify="center">
-				<el-col :span="8" :xs="16" :sm="16" :md="8">
-					<router-view></router-view>
-				</el-col>
-			</el-row>
+				<router-view></router-view>
 		</el-main>
     <el-footer>
+		<div>
+			You can visit demo receiver app <a th:href="@{${receiverApp}}">here.</a>
+		</div>
       <el-image src="healthlx-logo.png" alt="HealthLX" class="hlx-logo"></el-image>
     </el-footer>
 

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 public class IndexController {
 
     @Autowired
-    MessageService messageService;
+    private MessageService messageService;
 
     @GetMapping("/launch")
     public String main() {

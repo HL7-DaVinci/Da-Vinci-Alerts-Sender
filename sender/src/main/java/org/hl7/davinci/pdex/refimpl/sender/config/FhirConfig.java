@@ -10,8 +10,12 @@ public class FhirConfig {
 
   @Bean
   public FhirContext fhirContext() {
-    //We are using R4 both at Payer and Provider.
     return FhirContext.forR4();
+  }
+
+  @Bean
+  public IParser parser(FhirContext context) {
+    return context.newJsonParser().setPrettyPrint(true);
   }
 
   @Bean

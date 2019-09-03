@@ -16,7 +16,7 @@ public class IGenericClientProvider {
   private final String fhirServerUri;
 
   public IGenericClientProvider(@Autowired FhirContext fhirContext,
-      @Value("${payer-b.fhir-server-uri}") String fhirServerUri) {
+      @Value("${ehr.fhir-server-uri}") String fhirServerUri) {
     this.fhirContext = fhirContext;
     this.fhirServerUri = fhirServerUri;
   }
