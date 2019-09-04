@@ -1,14 +1,15 @@
-package org.hl7.davinci.pdex.refimpl.sender.service;
+package org.hl7.davinci.pdex.refimpl.sender.alerts.message;
 
-import ca.uhn.fhir.context.FhirContext;
+import org.hl7.davinci.pdex.refimpl.sender.alerts.EventType;
 import org.hl7.fhir.r4.model.*;
+import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Collections;
 
-public class AdmissionBundleCreator {
+@Component(EventType.EMERGENCY_IMPATIENT_ADMISSION)
+public class EmergencyImpatientMessageCreator implements MessageCreator {
 
-    public static Bundle createNotifyBundle(Patient patient){
+    public Parameters createNotifyOperation(Patient patient) {
         Bundle bundle = new Bundle();
         bundle.setType(Bundle.BundleType.TRANSACTION);
 
@@ -24,23 +25,26 @@ public class AdmissionBundleCreator {
         communication.addPayload(new Communication.CommunicationPayloadComponent().setContent(new StringType().setValue("Admit to zyx")));
         bundle.addEntry().setResource(communication);
 
-        return bundle;
+        Parameters parameters = new Parameters();
+        parameters.addParameter().setName("admit").setResource(bundle);
+
+        return parameters;
     }
 
-    public static Bundle createMessageBundle(Patient patient) {
+    public Bundle createMessageBundle(Patient patient) {
         Bundle bundle = new Bundle();
         bundle.setType(Bundle.BundleType.TRANSACTION);
 
         Encounter encounter = new Encounter()
-            .setType(Collections.singletonList(
-                new CodeableConcept(new Coding("http://www.ama-assn.org/go/cpt","12345","Admit to zyx")))
-            )
-            .setSubject(new Reference(patient));
+                .setType(Collections.singletonList(
+                        new CodeableConcept(new Coding("http://www.ama-assn.org/go/cpt", "12345", "Admit to zyx")))
+                )
+                .setSubject(new Reference(patient));
         MessageHeader header = new MessageHeader().setFocus(Collections.singletonList(new Reference(encounter)));
 
         bundle.addEntry().setResource(header)
-            .getRequest()
-            .setMethod(Bundle.HTTPVerb.POST);
+                .getRequest()
+                .setMethod(Bundle.HTTPVerb.POST);
 
         bundle.addEntry().setResource(encounter);
         bundle.addEntry().setResource(new Condition());
