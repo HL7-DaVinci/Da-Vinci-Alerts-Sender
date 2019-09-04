@@ -7,6 +7,8 @@ import org.hl7.davinci.pdex.refimpl.receiver.service.MessageService;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Communication;
+import org.hl7.fhir.r4.model.Endpoint;
+import org.hl7.fhir.r4.model.Parameters;
 
 public class CommunicationResourceProvider implements IResourceProvider {
     private MessageService messageService;

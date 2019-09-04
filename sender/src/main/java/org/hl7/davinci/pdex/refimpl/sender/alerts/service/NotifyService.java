@@ -22,7 +22,6 @@ public class NotifyService {
                 .named("$notify")
                 .withParameters(parameters)
                 .execute();
-
         return result.toString();
     }
 }

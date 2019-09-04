@@ -63,19 +63,17 @@ public class AdmissionMessageCreator implements MessageCreator {
                 .getRequest()
                 .setMethod(Bundle.HTTPVerb.POST);
 
-        Parameters parameters = new Parameters();
+
         Endpoint endpoint = new Endpoint()
                 .setConnectionType(new Coding("http://terminology.hl7.org/CodeSystem/endpoint-connection-type", "hl7-fhir-rest", "hl7-fhir-rest"))
                 .setStatus(Endpoint.EndpointStatus.ACTIVE)
                 .setName("Acme Hospital EHR FHIR R4 Server")
                 .setAddress("https://fhir-ehr.acme/r4/1234/")
                 .setHeader(Collections.singletonList(new StringType("Authorization: Bearer this_is_demo")));
-
-        parameters.addParameter().setName("alert").setPart(Arrays.asList(
-                new Parameters.ParametersParameterComponent().setName("alert-endpoint").setResource(endpoint),
-                new Parameters.ParametersParameterComponent().setName("alert-bundle").setResource(bundle)
-        ));
+        Parameters parameters = new Parameters();
+        parameters.addParameter().setName("alert-bundle").setResource(bundle);
         return parameters;
+
     }
 
     public Bundle createMessageBundle(Patient patient) {
