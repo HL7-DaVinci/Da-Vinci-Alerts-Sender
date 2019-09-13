@@ -14,13 +14,14 @@
 			data() {
 				return {
                     eventSource : undefined,
-                    messages: []
+                    messages: [],
+                    collapseMessages: []
 				};
 			},
 			created(){
 			    this.eventSource = new EventSource(`/subscribe`);
 			    this.eventSource.addEventListener("message", ({ data }) => {
-                    this.messages.unshift( {content : data } );
+                    this.messages.unshift( JSON.parse(data) );
                     this.$message.success("Message received");
                 });
 

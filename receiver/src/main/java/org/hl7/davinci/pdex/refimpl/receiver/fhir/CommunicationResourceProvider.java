@@ -25,7 +25,7 @@ public class CommunicationResourceProvider implements IResourceProvider {
 
     @Operation(name = "$notify")
     public Bundle notify(@OperationParam(name = "alert-bundle") Bundle bundle) {
-        messageService.messageReceived(bundle);
+        messageService.messageReceived(bundle, "$notify");
         return bundle;
     }
 

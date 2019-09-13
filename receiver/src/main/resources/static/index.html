@@ -34,14 +34,16 @@
 <body>
 
 	<template id="hlx-patient-form">
-		<el-table
-				:data="messages"
-				style="width: 100%">
-			<el-table-column
-					prop="content"
-					label="Message content">
-			</el-table-column>
-		</el-table>
+		<el-collapse  v-model="collapseMessages">
+			<el-collapse-item v-for="msg in messages">
+				<template slot="title">
+					{{ msg.title }}
+				</template>
+				<div >
+					<div style="overflow-x:scroll;"><pre>{{msg.content}}</pre></div>
+				</div>
+			</el-collapse-item>
+		</el-collapse>
 	</template>
 
 

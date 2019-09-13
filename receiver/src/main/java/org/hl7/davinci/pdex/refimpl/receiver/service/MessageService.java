@@ -1,7 +1,11 @@
 package org.hl7.davinci.pdex.refimpl.receiver.service;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.parser.IParser;
+import com.google.gson.Gson;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -23,12 +27,11 @@ public class MessageService {
         return emitter;
     }
 
-    public void messageReceived(Bundle message){
+    public void messageReceived(Bundle message,String channelType){
         List<SseEmitter> deadEmitters = new ArrayList<>();
         this.emitters.forEach(emitter -> {
             try {
-                //emitter.send(new Gson().toJson(message));
-                emitter.send(FhirContext.forR4().newJsonParser().encodeResourceToString(message));
+                emitter.send(formatBundleIntoMessage(message, channelType));
             }
             catch (IOException e) {
                 deadEmitters.add(emitter);
@@ -36,6 +39,15 @@ public class MessageService {
         });
 
         this.emitters.removeAll(deadEmitters);
+    }
+
+    private String formatBundleIntoMessage(Bundle bundle, String channelType) {
+        IParser iParser = FhirContext.forR4().newJsonParser().setPrettyPrint(true);
+        String bundleString = iParser.encodeResourceToString(bundle);
+        Patient patient = ((Patient) bundle.getEntryFirstRep().getResource());
+        String patientString = patient.getNameFirstRep().getNameAsSingleString();
+        String code = "some code";
+        return new Gson().toJson(new Message(channelType+patientString+code,bundleString));
     }
 
 }
