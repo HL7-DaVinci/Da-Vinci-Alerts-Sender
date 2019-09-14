@@ -63,7 +63,14 @@ abstract class BaseMessageCreator implements MessageCreator {
                 .setAddress("https://fhir-ehr.acme/r4/1234/")
                 .setHeader(Collections.singletonList(new StringType("Authorization: Bearer this_is_demo")));
         Parameters parameters = new Parameters();
-        parameters.addParameter().setName("alert-bundle").setResource(bundle);
+        parameters.setId("admit-1");
+        Parameters.ParametersParameterComponent param1 = new Parameters.ParametersParameterComponent();
+        param1.setName("alert");
+        param1.setPart(Arrays.asList(
+                new Parameters.ParametersParameterComponent().setName("alert-endpoint").setResource(endpoint),
+                new Parameters.ParametersParameterComponent().setName("alert-bundle").setResource(bundle)
+        ));
+        parameters.addParameter(param1);
         return parameters;
     }
 

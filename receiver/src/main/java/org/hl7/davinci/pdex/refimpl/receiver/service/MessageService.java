@@ -55,7 +55,23 @@ public class MessageService {
     }
 
     private String formatParametersIntoMessage(Parameters parameters) {
-        Bundle bundle = (Bundle) parameters.getParameterFirstRep().getResource();
+        Parameters.ParametersParameterComponent parameterComponent = null;
+        for (Parameters.ParametersParameterComponent next : parameters.getParameter()) {
+            if (next.getName().equals("alert")) {
+                parameterComponent = next;
+            }
+        }
+
+        Bundle bundle = null;
+        Endpoint endpoint = null;
+        for (Parameters.ParametersParameterComponent parametersParameterComponent : parameterComponent.getPart()) {
+            if (parametersParameterComponent.getName().equals("alert-bundle")) {
+                bundle = (Bundle) parametersParameterComponent.getResource();
+            }
+            if (parametersParameterComponent.getName().equals("alert-endpoint")) {
+                endpoint = (Endpoint) parametersParameterComponent.getResource();
+            }
+        }
 
         String parametersString = iParser.encodeResourceToString(parameters);
         Patient patient = getPatient(bundle);
