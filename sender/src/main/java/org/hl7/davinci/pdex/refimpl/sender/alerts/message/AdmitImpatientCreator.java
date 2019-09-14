@@ -1,34 +1,22 @@
 package org.hl7.davinci.pdex.refimpl.sender.alerts.message;
 
-import org.hl7.davinci.pdex.refimpl.sender.alerts.EventType;
+import org.hl7.davinci.pdex.refimpl.sender.alerts.AlertType;
 import org.hl7.fhir.r4.model.*;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 
-@Component(EventType.EMERGENCY_IMPATIENT_ADMISSION)
-public class EmergencyImpatientMessageCreator implements MessageCreator {
+@Component(AlertType.ADMIT_INPATIENT)
+public class AdmitImpatientCreator extends BaseMessageCreator {
 
     public Parameters createNotifyOperation(Patient patient) {
-        Bundle bundle = new Bundle();
-        bundle.setType(Bundle.BundleType.TRANSACTION);
-
-        bundle.addEntry().setResource(patient)
-                .getRequest()
-                .setMethod(Bundle.HTTPVerb.POST);
-
-        bundle.addEntry().setResource(new Encounter());
-        bundle.addEntry().setResource(new Condition());
-        bundle.addEntry().setResource(new Endpoint());
-
-        Communication communication = new Communication();
-        communication.addPayload(new Communication.CommunicationPayloadComponent().setContent(new StringType().setValue("Admit to zyx")));
-        bundle.addEntry().setResource(communication);
-
-        Parameters parameters = new Parameters();
-        parameters.addParameter().setName("admit").setResource(bundle);
-
-        return parameters;
+        return createDemoNotifyParams(
+                patient,
+                "IMP", "impatient encounter",
+                getTopic(AlertType.ADMIT_INPATIENT, "Alert Admit Inpatient")
+        );
     }
 
     public Bundle createMessageBundle(Patient patient) {

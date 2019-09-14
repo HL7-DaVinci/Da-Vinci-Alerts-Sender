@@ -1,16 +1,15 @@
 package org.hl7.davinci.pdex.refimpl.receiver.service;
 
-import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import com.google.gson.Gson;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Resource;
+import org.hl7.fhir.r4.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -19,7 +18,14 @@ public class MessageService {
 
     private final CopyOnWriteArrayList<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
-    public SseEmitter subscribe(){
+    private IParser iParser;
+
+    @Autowired
+    public MessageService(IParser iParser) {
+        this.iParser = iParser;
+    }
+
+    public SseEmitter subscribe() {
         SseEmitter emitter = new SseEmitter();
         this.emitters.add(emitter);
         emitter.onCompletion(() -> this.emitters.remove(emitter));
@@ -27,13 +33,12 @@ public class MessageService {
         return emitter;
     }
 
-    public void messageReceived(Bundle message,String channelType){
+    public void messageReceived(Bundle message, String channelType) {
         List<SseEmitter> deadEmitters = new ArrayList<>();
         this.emitters.forEach(emitter -> {
             try {
                 emitter.send(formatBundleIntoMessage(message, channelType));
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 deadEmitters.add(emitter);
             }
         });
@@ -42,12 +47,36 @@ public class MessageService {
     }
 
     private String formatBundleIntoMessage(Bundle bundle, String channelType) {
-        IParser iParser = FhirContext.forR4().newJsonParser().setPrettyPrint(true);
         String bundleString = iParser.encodeResourceToString(bundle);
-        Patient patient = ((Patient) bundle.getEntryFirstRep().getResource());
+        Patient patient = getPatient(bundle);
         String patientString = patient.getNameFirstRep().getNameAsSingleString();
-        String code = "some code";
-        return new Gson().toJson(new Message(channelType+patientString+code,bundleString));
+        String code = getEncounterCode(bundle);
+        return new Gson().toJson(new Message(channelType, patientString, code, bundleString));
+    }
+
+    private String getEncounterCode(Bundle bundle) {
+        Encounter encounter = (Encounter) getFirstResourceOfType(bundle, ResourceType.Encounter);
+        if (encounter.getClass_().isEmpty()) {//we are at discharge
+            Coding coding = encounter.getHospitalization().getDischargeDisposition().getCodingFirstRep();
+            return "Discharge disposition code: " + coding.getCode() + " " + coding.getDisplay();
+        }
+        return "Encounter code: " + encounter.getClass_().getCode() + "  " + encounter.getClass_().getDisplay();
+    }
+
+    private Patient getPatient(Bundle bundle) {
+        return (Patient) getFirstResourceOfType(bundle, ResourceType.Patient);
+    }
+
+    private Resource getFirstResourceOfType(Bundle bundle, ResourceType type) {
+        Resource res = null;
+        Iterator<Bundle.BundleEntryComponent> iterator = bundle.getEntry().iterator();
+        while (iterator.hasNext() && res == null) {
+            Resource resource = iterator.next().getResource();
+            if (type.equals(resource.getResourceType())) {
+                res = resource;
+            }
+        }
+        return res;
     }
 
 }

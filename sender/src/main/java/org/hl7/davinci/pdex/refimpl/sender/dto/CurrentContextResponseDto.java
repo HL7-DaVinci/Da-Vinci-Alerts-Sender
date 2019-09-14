@@ -3,6 +3,7 @@ package org.hl7.davinci.pdex.refimpl.sender.dto;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hl7.davinci.pdex.refimpl.sender.alerts.AlertType;
 import org.hl7.fhir.r4.model.DateType;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.HumanName;
@@ -37,8 +38,11 @@ public class CurrentContextResponseDto {
     );
 
     this.events = Arrays.asList(
-            new EventDto("e-i-admission","Emergency and Inpatient Admissions"),
-            new EventDto("admission-observation","Admission for Observation")
+            new EventDto(AlertType.ADMIT_ER,"Alert Admit ER"),
+            new EventDto(AlertType.ADMIT_INPATIENT,"Alert Admit Inpatient"),
+            new EventDto(AlertType.ADMIT_FOROBSERVATION,"Alert Admit for Observation"),
+            new EventDto(AlertType.ADMIT_AMBULATORY,"Alert Admit Ambulatory"),
+            new EventDto(AlertType.DISCHARGE,"Alert Discharge")
     );
     this.channelTypes = Arrays.asList(
             new ChannelTypeDto("notify","Notification ($notify)"),

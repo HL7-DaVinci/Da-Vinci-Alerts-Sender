@@ -1,17 +1,14 @@
 package org.hl7.davinci.pdex.refimpl.sender.alerts.message;
 
-import org.hl7.davinci.pdex.refimpl.sender.alerts.EventType;
 import org.hl7.fhir.r4.model.*;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
-@Component(value = EventType.ADMISSION_OBSERVATION)
-public class AdmissionMessageCreator implements MessageCreator {
+abstract class BaseMessageCreator implements MessageCreator {
 
-    public Parameters createNotifyOperation(Patient patient) {
+    Parameters createDemoNotifyParams(Patient patient, String encounterCode, String encounterDisplay, CodeableConcept topic) {
         Bundle bundle = new Bundle()
                 .setType(Bundle.BundleType.TRANSACTION);
 
@@ -19,14 +16,8 @@ public class AdmissionMessageCreator implements MessageCreator {
                 .getRequest()
                 .setMethod(Bundle.HTTPVerb.POST);
 
-        Encounter encounter = new Encounter()
-                .setStatus(Encounter.EncounterStatus.FINISHED)
-                .setClass_(new Coding("http://terminology.hl7.org/CodeSystem/v3-ActCode", "IMP", "inpatient encounter"))
-                .setSubject(new Reference(patient))
-                .setPeriod(new Period().setStart(new Date()).setEnd(new Date()))
-                .setLocation(Collections.singletonList(new Encounter.EncounterLocationComponent(new Reference("Location/hl7east"))))
-                .setType(Collections.singletonList(new CodeableConcept(new Coding("http://www.ama-assn.org/go/cpt", "99234", "99234")).setText("inpatient hospital care")));
 
+        Encounter encounter = createEncounter(patient, encounterCode, encounterDisplay);
         bundle.addEntry().setResource(encounter)
                 .getRequest()
                 .setMethod(Bundle.HTTPVerb.POST);
@@ -55,7 +46,7 @@ public class AdmissionMessageCreator implements MessageCreator {
                         new Communication.CommunicationPayloadComponent().setContent(new Reference(condition))
                 ))
                 .setAbout(Collections.singletonList(new Reference("Coverage/example-1")))
-                .setTopic(new CodeableConcept(new Coding("http://hl7.org/fhir/us/davinci-alerts/CodeSystem/communication-topic", "alert-admit-inpatient", "Alert Admit Inpatient")).setText("Alert Admit Inpatient"))
+                .setTopic(topic)
                 .setCategory(Collections.singletonList(new CodeableConcept(new Coding("http://terminology.hl7.org/CodeSystem/communication-category", "alert", "Alert")).setText("Alert")))
                 .setIdentifier(Collections.singletonList(new Identifier().setSystem("urn:oid:1.3.4.5.6.7").setValue("2345678901")));
 
@@ -73,30 +64,20 @@ public class AdmissionMessageCreator implements MessageCreator {
         Parameters parameters = new Parameters();
         parameters.addParameter().setName("alert-bundle").setResource(bundle);
         return parameters;
-
     }
 
-    public Bundle createMessageBundle(Patient patient) {
-        Bundle bundle = new Bundle();
-        bundle.setType(Bundle.BundleType.TRANSACTION);
-
-        Encounter encounter = new Encounter()
-                .setType(Collections.singletonList(
-                        new CodeableConcept(new Coding("http://www.ama-assn.org/go/cpt", "12345", "Admit to zyx")))
-                )
-                .setSubject(new Reference(patient));
-        MessageHeader header = new MessageHeader().setFocus(Collections.singletonList(new Reference(encounter)));
-
-        bundle.addEntry().setResource(header)
-                .getRequest()
-                .setMethod(Bundle.HTTPVerb.POST);
-
-        bundle.addEntry().setResource(encounter);
-        bundle.addEntry().setResource(new Condition());
-        bundle.addEntry().setResource(new Condition());
-        bundle.addEntry().setResource(new Coverage());
-        bundle.addEntry().setResource(new Endpoint());
-
-        return bundle;
+    Encounter createEncounter(Patient patient, String code, String display) {
+        return new Encounter()
+                .setStatus(Encounter.EncounterStatus.FINISHED)
+                .setClass_(new Coding("http://terminology.hl7.org/CodeSystem/v3-ActCode", code, display))
+                .setSubject(new Reference(patient))
+                .setPeriod(new Period().setStart(new Date()).setEnd(new Date()))
+                .setLocation(Collections.singletonList(new Encounter.EncounterLocationComponent(new Reference("Location/hl7east"))))
+                .setType(Collections.singletonList(new CodeableConcept(new Coding("http://www.ama-assn.org/go/cpt", "99234", "99234")).setText("inpatient hospital care")));
     }
+
+    CodeableConcept getTopic(String code, String display) {
+        return new CodeableConcept(new Coding("http://hl7.org/fhir/us/davinci-alerts/CodeSystem/communication-topic", code, display)).setText(display);
+    }
+
 }
