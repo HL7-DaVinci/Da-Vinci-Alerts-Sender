@@ -10,7 +10,7 @@ abstract class BaseMessageCreator implements MessageCreator {
 
     Parameters createDemoNotifyParams(Patient patient, String encounterCode, String encounterDisplay, CodeableConcept topic) {
         Bundle bundle = new Bundle()
-                .setType(Bundle.BundleType.TRANSACTION);
+                .setType(Bundle.BundleType.COLLECTION);
 
         bundle.addEntry().setResource(patient)
                 .getRequest()
