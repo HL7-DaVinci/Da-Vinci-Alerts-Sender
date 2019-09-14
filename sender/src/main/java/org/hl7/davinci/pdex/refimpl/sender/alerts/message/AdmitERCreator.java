@@ -19,6 +19,11 @@ public class AdmitERCreator extends BaseMessageCreator {
 
     @Override
     public Bundle createMessageBundle(Patient patient) {
-        return null;
+        return createDemoProcessMessage(
+                patient,
+                "EMER",
+                "emergency",
+                getTopic(AlertType.ADMIT_ER, "Alert Admit ER").getCodingFirstRep()
+        );
     }
 }

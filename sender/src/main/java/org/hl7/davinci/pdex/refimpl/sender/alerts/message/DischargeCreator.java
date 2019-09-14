@@ -19,24 +19,7 @@ public class DischargeCreator extends BaseMessageCreator {
                 .getRequest()
                 .setMethod(Bundle.HTTPVerb.POST);
 
-
-        Encounter encounter =  new Encounter()
-                .setStatus(Encounter.EncounterStatus.FINISHED)
-                .setSubject(new Reference(patient))
-                .setPeriod(new Period().setStart(new Date()).setEnd(new Date()))
-                .setHospitalization(
-                        new Encounter.EncounterHospitalizationComponent().setDischargeDisposition(
-                                new CodeableConcept(
-                                        new Coding(
-                                                "http://terminology.hl7.org/CodeSystem/discharge-disposition",
-                                                "home",
-                                                "Home"
-                                        )
-                                )
-                        )
-                )
-                .setLocation(Collections.singletonList(new Encounter.EncounterLocationComponent(new Reference("Location/hl7east"))))
-                .setType(Collections.singletonList(new CodeableConcept(new Coding("http://www.ama-assn.org/go/cpt", "99234", "99234")).setText("inpatient hospital care")));
+        Encounter encounter = getDischargeEncounter(patient);
 
         bundle.addEntry().setResource(encounter)
                 .getRequest()
@@ -88,6 +71,44 @@ public class DischargeCreator extends BaseMessageCreator {
 
     @Override
     public Bundle createMessageBundle(Patient patient) {
-        return null;
+        Bundle bundle = new Bundle();
+        bundle.setType(Bundle.BundleType.TRANSACTION);
+
+        Encounter encounter =  getDischargeEncounter(patient);
+        MessageHeader header = new MessageHeader()
+                .setEvent(getTopic(AlertType.DISCHARGE, "Alert Discharge").getCodingFirstRep())
+                .setFocus(Collections.singletonList(new Reference(encounter)));
+
+        bundle.addEntry().setResource(header)
+                .getRequest()
+                .setMethod(Bundle.HTTPVerb.POST);
+
+        bundle.addEntry().setResource(encounter);
+        bundle.addEntry().setResource(patient);
+        bundle.addEntry().setResource(new Condition());
+        bundle.addEntry().setResource(new Coverage());
+        bundle.addEntry().setResource(new Endpoint());
+
+        return bundle;
+    }
+
+    private Encounter getDischargeEncounter(Patient patient) {
+        return new Encounter()
+                .setStatus(Encounter.EncounterStatus.FINISHED)
+                .setSubject(new Reference(patient))
+                .setPeriod(new Period().setStart(new Date()).setEnd(new Date()))
+                .setHospitalization(
+                        new Encounter.EncounterHospitalizationComponent().setDischargeDisposition(
+                                new CodeableConcept(
+                                        new Coding(
+                                                "http://terminology.hl7.org/CodeSystem/discharge-disposition",
+                                                "home",
+                                                "Home"
+                                        )
+                                )
+                        )
+                )
+                .setLocation(Collections.singletonList(new Encounter.EncounterLocationComponent(new Reference("Location/hl7east"))))
+                .setType(Collections.singletonList(new CodeableConcept(new Coding("http://www.ama-assn.org/go/cpt", "99234", "99234")).setText("inpatient hospital care")));
     }
 }

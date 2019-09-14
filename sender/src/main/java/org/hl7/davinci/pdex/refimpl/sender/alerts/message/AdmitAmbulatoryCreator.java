@@ -19,6 +19,11 @@ public class AdmitAmbulatoryCreator extends BaseMessageCreator {
 
     @Override
     public Bundle createMessageBundle(Patient patient) {
-        return null;
+        return createDemoProcessMessage(
+                patient,
+                "AMB",
+                "ambulatory",
+                getTopic(AlertType.ADMIT_AMBULATORY, "Alert Admit Ambulatory").getCodingFirstRep()
+        );
     }
 }

@@ -66,6 +66,28 @@ abstract class BaseMessageCreator implements MessageCreator {
         return parameters;
     }
 
+    Bundle createDemoProcessMessage(Patient patient, String code, String display, Coding headerCoding) {
+        Bundle bundle = new Bundle();
+        bundle.setType(Bundle.BundleType.TRANSACTION);
+
+        Encounter encounter =  createEncounter(patient, code, display);
+        MessageHeader header = new MessageHeader()
+                .setEvent(headerCoding)
+                .setFocus(Collections.singletonList(new Reference(encounter)));
+
+        bundle.addEntry().setResource(header)
+                .getRequest()
+                .setMethod(Bundle.HTTPVerb.POST);
+
+        bundle.addEntry().setResource(encounter);
+        bundle.addEntry().setResource(patient);
+        bundle.addEntry().setResource(new Condition());
+        bundle.addEntry().setResource(new Coverage());
+        bundle.addEntry().setResource(new Endpoint());
+
+        return bundle;
+    }
+
     Encounter createEncounter(Patient patient, String code, String display) {
         return new Encounter()
                 .setStatus(Encounter.EncounterStatus.FINISHED)
