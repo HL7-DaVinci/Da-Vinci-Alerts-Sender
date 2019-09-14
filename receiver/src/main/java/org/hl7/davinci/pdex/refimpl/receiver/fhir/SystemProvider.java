@@ -15,7 +15,7 @@ public class SystemProvider {
 
     @Operation(name="$process-message")
     public Bundle closureOperation(@OperationParam(name = "someName") Bundle bundle){
-        messageService.messageReceived(bundle,"$process-message");
+        messageService.notificationReceived(bundle);
         return bundle;
     }
 

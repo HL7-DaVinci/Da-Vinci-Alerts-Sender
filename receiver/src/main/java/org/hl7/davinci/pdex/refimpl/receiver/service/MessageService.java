@@ -33,11 +33,19 @@ public class MessageService {
         return emitter;
     }
 
-    public void messageReceived(Bundle message, String channelType) {
+    public void notificationReceived(Bundle bundle) {
+        emitReceivedMessage(formatBundleIntoMessage(bundle));
+    }
+
+    public void notificationReceived(Parameters parameters) {
+        emitReceivedMessage(formatParametersIntoMessage(parameters));
+    }
+
+    private void emitReceivedMessage(String message) {
         List<SseEmitter> deadEmitters = new ArrayList<>();
         this.emitters.forEach(emitter -> {
             try {
-                emitter.send(formatBundleIntoMessage(message, channelType));
+                emitter.send(message);
             } catch (IOException e) {
                 deadEmitters.add(emitter);
             }
@@ -46,12 +54,22 @@ public class MessageService {
         this.emitters.removeAll(deadEmitters);
     }
 
-    private String formatBundleIntoMessage(Bundle bundle, String channelType) {
+    private String formatParametersIntoMessage(Parameters parameters) {
+        Bundle bundle = (Bundle) parameters.getParameterFirstRep().getResource();
+
+        String parametersString = iParser.encodeResourceToString(parameters);
+        Patient patient = getPatient(bundle);
+        String patientString = patient.getNameFirstRep().getNameAsSingleString();
+        String code = getEncounterCode(bundle);
+        return new Gson().toJson(new Message("$notify", patientString, code, parametersString));
+    }
+
+    private String formatBundleIntoMessage(Bundle bundle) {
         String bundleString = iParser.encodeResourceToString(bundle);
         Patient patient = getPatient(bundle);
         String patientString = patient.getNameFirstRep().getNameAsSingleString();
         String code = getEncounterCode(bundle);
-        return new Gson().toJson(new Message(channelType, patientString, code, bundleString));
+        return new Gson().toJson(new Message("$process-message", patientString, code, bundleString));
     }
 
     private String getEncounterCode(Bundle bundle) {

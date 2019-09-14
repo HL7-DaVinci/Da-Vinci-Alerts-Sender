@@ -1,5 +1,6 @@
 package org.hl7.davinci.pdex.refimpl.receiver.fhir;
 
+import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.RestfulServer;
@@ -19,6 +20,9 @@ public class FhirReceiverServer extends RestfulServer {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private IParser parser;
+
     /**
      * The initialize method is automatically called when the servlet is starting up, so it can
      * be used to configure the servlet to define resource providers, or set up
@@ -32,7 +36,7 @@ public class FhirReceiverServer extends RestfulServer {
         registerProvider(new SystemProvider(messageService));
 
         List<IResourceProvider> resourceProviders = new ArrayList<IResourceProvider>();
-        resourceProviders.add(new CommunicationResourceProvider(messageService));
+        resourceProviders.add(new CommunicationResourceProvider(messageService, parser));
         setResourceProviders(resourceProviders);
     }
 

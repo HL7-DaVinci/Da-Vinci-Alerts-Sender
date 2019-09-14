@@ -1,20 +1,26 @@
 package org.hl7.davinci.pdex.refimpl.receiver.fhir;
 
+import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.annotation.Operation;
-import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
+import org.apache.commons.io.IOUtils;
 import org.hl7.davinci.pdex.refimpl.receiver.service.MessageService;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Communication;
-import org.hl7.fhir.r4.model.Endpoint;
 import org.hl7.fhir.r4.model.Parameters;
 
-public class CommunicationResourceProvider implements IResourceProvider {
-    private MessageService messageService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-    CommunicationResourceProvider(MessageService messageService) {
+public class CommunicationResourceProvider implements IResourceProvider {
+
+    private MessageService messageService;
+    private IParser parser;
+
+    CommunicationResourceProvider(MessageService messageService, IParser parser) {
         this.messageService = messageService;
+        this.parser = parser;
     }
 
     @Override
@@ -22,11 +28,17 @@ public class CommunicationResourceProvider implements IResourceProvider {
         return Communication.class;
     }
 
+    @Operation(name = "$notify", manualRequest = true, manualResponse = true)
+    public void manualNotify(
+            HttpServletRequest theServletRequest,
+            HttpServletResponse theServletResponse
+    ) throws IOException {
+        IBaseResource iBaseResource = parser.parseResource(new String(IOUtils.toByteArray(theServletRequest.getInputStream())));
+        Parameters parameters = (Parameters) iBaseResource;
+        messageService.notificationReceived(parameters);
 
-    @Operation(name = "$notify")
-    public Bundle notify(@OperationParam(name = "alert-bundle") Bundle bundle) {
-        messageService.messageReceived(bundle, "$notify");
-        return bundle;
+        theServletResponse.setStatus(200);
+
     }
 
 }
