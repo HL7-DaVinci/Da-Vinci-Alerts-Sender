@@ -83,6 +83,8 @@ public class DischargeCreator extends BaseMessageCreator {
                 .getRequest()
                 .setMethod(Bundle.HTTPVerb.POST);
 
+        bundle.addEntry().setResource(encounter);
+        bundle.addEntry().setResource(patient);
 
         Condition condition = new Condition()
                 .setSubject(new Reference(patient).setDisplay(patient.getNameFirstRep().primitiveValue()))
