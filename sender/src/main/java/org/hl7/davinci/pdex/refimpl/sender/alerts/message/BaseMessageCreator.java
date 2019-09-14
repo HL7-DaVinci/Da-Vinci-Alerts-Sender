@@ -5,6 +5,7 @@ import org.hl7.fhir.r4.model.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.UUID;
 
 abstract class BaseMessageCreator implements MessageCreator {
 
@@ -66,14 +67,16 @@ abstract class BaseMessageCreator implements MessageCreator {
         return parameters;
     }
 
-    Bundle createDemoProcessMessage(Patient patient, String code, String display, Coding headerCoding) {
+    Bundle createDemoProcessMessage(Patient patient, String code, String display, Coding topic) {
         Bundle bundle = new Bundle();
         bundle.setType(Bundle.BundleType.TRANSACTION);
 
         Encounter encounter = createEncounter(patient, code, display);
+        bundle.addEntry().setResource(encounter);
+
         MessageHeader header = new MessageHeader()
-                .setEvent(headerCoding)
-                .setDestination(Arrays.asList(
+                .setEvent(topic)
+                .setDestination(Collections.singletonList(
                         new MessageHeader.MessageDestinationComponent()
                                 .setName("Acme Message Gateway")
                                 .setTarget(new Reference().setDisplay("Device/example"))
@@ -100,7 +103,6 @@ abstract class BaseMessageCreator implements MessageCreator {
                 .getRequest()
                 .setMethod(Bundle.HTTPVerb.POST);
 
-        bundle.addEntry().setResource(encounter);
         bundle.addEntry().setResource(patient);
 
         Condition condition = new Condition()
@@ -126,13 +128,14 @@ abstract class BaseMessageCreator implements MessageCreator {
     }
 
     Encounter createEncounter(Patient patient, String code, String display) {
-        return new Encounter()
+        return (Encounter) new Encounter()
                 .setStatus(Encounter.EncounterStatus.FINISHED)
                 .setClass_(new Coding("http://terminology.hl7.org/CodeSystem/v3-ActCode", code, display))
                 .setSubject(new Reference(patient))
                 .setPeriod(new Period().setStart(new Date()).setEnd(new Date()))
                 .setLocation(Collections.singletonList(new Encounter.EncounterLocationComponent(new Reference("Location/hl7east"))))
-                .setType(Collections.singletonList(new CodeableConcept(new Coding("http://www.ama-assn.org/go/cpt", "99234", "99234")).setText("inpatient hospital care")));
+                .setType(Collections.singletonList(new CodeableConcept(new Coding("http://www.ama-assn.org/go/cpt", "99234", "99234")).setText("inpatient hospital care")))
+                .setId(UUID.randomUUID().toString());//in real app we will have Encounter with real id so we emulate it here.
     }
 
     CodeableConcept getTopic(String code, String display) {

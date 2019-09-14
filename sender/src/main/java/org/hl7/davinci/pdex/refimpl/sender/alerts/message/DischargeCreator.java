@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.UUID;
 
 @Component(value = AlertType.DISCHARGE)
 public class DischargeCreator extends BaseMessageCreator {
@@ -109,7 +110,7 @@ public class DischargeCreator extends BaseMessageCreator {
     }
 
     private Encounter getDischargeEncounter(Patient patient) {
-        return new Encounter()
+        return (Encounter) new Encounter()
                 .setStatus(Encounter.EncounterStatus.FINISHED)
                 .setSubject(new Reference(patient))
                 .setPeriod(new Period().setStart(new Date()).setEnd(new Date()))
@@ -125,6 +126,7 @@ public class DischargeCreator extends BaseMessageCreator {
                         )
                 )
                 .setLocation(Collections.singletonList(new Encounter.EncounterLocationComponent(new Reference("Location/hl7east"))))
-                .setType(Collections.singletonList(new CodeableConcept(new Coding("http://www.ama-assn.org/go/cpt", "99234", "99234")).setText("inpatient hospital care")));
+                .setType(Collections.singletonList(new CodeableConcept(new Coding("http://www.ama-assn.org/go/cpt", "99234", "99234")).setText("inpatient hospital care")))
+                .setId(UUID.randomUUID().toString());
     }
 }
