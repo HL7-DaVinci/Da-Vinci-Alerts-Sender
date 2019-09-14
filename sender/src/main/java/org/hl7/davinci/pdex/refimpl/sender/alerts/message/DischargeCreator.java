@@ -13,7 +13,7 @@ public class DischargeCreator extends BaseMessageCreator {
     @Override
     public Parameters createNotifyOperation(Patient patient) {
         Bundle bundle = new Bundle()
-                .setType(Bundle.BundleType.TRANSACTION);
+                .setType(Bundle.BundleType.COLLECTION);
 
         bundle.addEntry().setResource(patient)
                 .getRequest()
