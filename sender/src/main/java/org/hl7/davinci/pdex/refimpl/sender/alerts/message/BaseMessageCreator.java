@@ -79,7 +79,6 @@ abstract class BaseMessageCreator implements MessageCreator {
         bundle.setType(Bundle.BundleType.TRANSACTION);
 
         Encounter encounter = createEncounter(patient, code, display);
-        bundle.addEntry().setResource(encounter);
 
         MessageHeader header = new MessageHeader()
                 .setEvent(topic)
@@ -103,7 +102,7 @@ abstract class BaseMessageCreator implements MessageCreator {
                         )
                         .setEndpoint("llp:10.11.12.13:5432")
                 )
-
+                //todo add message definition and structure elements better.
                 .setFocus(Collections.singletonList(new Reference(encounter)));
 
         bundle.addEntry().setResource(header)
@@ -111,6 +110,7 @@ abstract class BaseMessageCreator implements MessageCreator {
                 .setMethod(Bundle.HTTPVerb.POST);
 
         bundle.addEntry().setResource(patient);
+        bundle.addEntry().setResource(encounter);
 
         Condition condition = new Condition()
                 .setSubject(new Reference(patient).setDisplay(patient.getNameFirstRep().primitiveValue()))
