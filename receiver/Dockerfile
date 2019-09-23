@@ -6,4 +6,4 @@ COPY ./build/libs/receiver-*.jar /service.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["sh", "/docker-entrypoint.sh"]w
+ENTRYPOINT ["sh", "/docker-entrypoint.sh"]
