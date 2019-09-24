@@ -1,16 +1,19 @@
-group = 'org.hl7.davinci.alerts.refimpl'
-version = '0.0.1-SNAPSHOT'
-description = ''
-
-apply plugin: 'java'
-
 plugins {
     id 'org.springframework.boot' version '2.1.4.RELEASE'
 }
-    
+apply plugin: 'java'
+
+
 repositories {
     mavenLocal()
     mavenCentral()
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
 }
 
 dependencies {
@@ -29,6 +32,11 @@ dependencies {
 
     testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.4.RELEASE'
 }
+
+group = 'org.hl7.davinci.alerts.refimpl'
+version = '0.0.1-SNAPSHOT'
+description = ''
+
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
