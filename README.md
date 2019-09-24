@@ -1,6 +1,6 @@
-PDex Alerts
+PDex Alerts Sender
 ===============
-Da Vinci reference implementations for the Alerts use case. More details about use case here:
+Da Vinci reference implementations for the Alerts use case (sender). More details about use case here:
 
 https://confluence.hl7.org/display/FHIR/2019-09+Da+Vinci+Alerts
 

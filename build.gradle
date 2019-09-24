@@ -1,26 +1,34 @@
+group = 'org.hl7.davinci.alerts.refimpl'
+version = '0.0.1-SNAPSHOT'
 description = ''
 
-allprojects {
-    group = 'org.hl7.davinci.pdex.refimpl'
-    version = '0.0.1-SNAPSHOT'
+apply plugin: 'java'
+
+plugins {
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
+}
+    
+repositories {
+    mavenLocal()
+    mavenCentral()
 }
 
-subprojects {
-    //all our modules works on java, but container folders (e.g. payer2provider) should not have java plugin
-    if(file('build.gradle').exists()){
-        apply plugin: 'java'
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.6'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
 
-        repositories {
-            mavenLocal()
-            mavenCentral()
-        }
+    compile 'org.springframework.boot:spring-boot-starter-web:2.1.4.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf:2.1.4.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-security:2.1.4.RELEASE'
+    compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.4.RELEASE'
 
-        dependencies {
-            compileOnly 'org.projectlombok:lombok:1.18.6'
-            annotationProcessor 'org.projectlombok:lombok:1.18.8'
-        }
+    developmentOnly 'org.springframework.boot:spring-boot-devtools:2.1.4.RELEASE'
 
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
-    }
+    compile 'ca.uhn.hapi.fhir:hapi-fhir-structures-r4:4.0.3'
+    compile 'ca.uhn.hapi.fhir:hapi-fhir-client:4.0.3'
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.4.RELEASE'
 }
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
