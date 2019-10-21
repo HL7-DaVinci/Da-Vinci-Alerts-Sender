@@ -1,0 +1,26 @@
+ehr:
+  fhir-server-uri: https://api.logicahealth.org/DaVinciAlertsEHR/data
+
+receiverApp: https://alert-receiver.herokuapp.com/
+receiverUrl: https://alert-receiver.herokuapp.com/fhir
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          ehr-client:
+            client-id: 87cb1aaf-f6ad-4bec-aeea-ac6a03fff71d
+            client-name: Alert Sender
+            provider: ehr-provider
+            redirect-uri: "{baseUrl}/login/oauth2/code/ehr-client"
+            client-authentication-method: none
+            authorization-grant-type: authorization_code
+            scope: 'launch/patient,openid,profile,launch,fhirUser,launch/encounter,patient/Patient.read,patient/*.read,offline_access,patient/Observation.read,patient/*.write,patient/Encounter.read,patient/Observation.write'
+        provider:
+          ehr-provider:
+            token-uri: https://auth.hspconsortium.org/token
+            authorization-uri: https://auth.hspconsortium.org/authorize
+            user-info-uri: https://auth.hspconsortium.org/userinfo
+            jwk-set-uri: https://auth.hspconsortium.org/jwk
+            userNameAttribute: sub

@@ -1,11 +1,10 @@
 plugins {
     id 'org.springframework.boot' version '2.1.4.RELEASE'
+    id 'java'
 }
-apply plugin: 'java'
-
 
 repositories {
-    mavenLocal()
+
     mavenCentral()
 }
 
@@ -22,8 +21,12 @@ dependencies {
 
     compile 'org.springframework.boot:spring-boot-starter-web:2.1.4.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf:2.1.4.RELEASE'
-    compile 'org.springframework.boot:spring-boot-starter-security:2.1.4.RELEASE'
-    compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.4.RELEASE'
+
+    compile "org.springframework.security:spring-security-web:5.2.0.RELEASE"
+    compile "org.springframework.security:spring-security-config:5.2.0.RELEASE"
+    compile "org.springframework.security:spring-security-oauth2-client:5.2.0.RELEASE"
+    compile "org.springframework.security:spring-security-oauth2-jose:5.2.0.RELEASE"
+    
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools:2.1.4.RELEASE'
 

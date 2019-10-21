@@ -1,33 +1,33 @@
 package org.hl7.davinci.alerts.refimpl.sender.config;
 
-import org.hl7.davinci.alerts.refimpl.sender.oauth2.filter.LaunchAwareOAuth2ClientContextFilter;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
 @Configuration
-@EnableOAuth2Sso
-// To make sure that Filters created by our WebSecurityConfigurerAdapter take precedence over Filters created by other
-// WebSecurityConfigurerAdapters.
-@Order(0)
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http.csrf().disable().headers().frameOptions().disable();
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
 
-    super.configure(http);
-  }
+    @Autowired
+    private SmartOnFhirAccessTokenResponseClient smartOnFhirAccessTokenResponseClient;
 
-  //This requires spring.main.allow-bean-definition-overriding=true in application.properties to override a default
-  // filter bean provided by spring-security-oauth2-autoconfigure.
-  @Bean
-  public OAuth2ClientContextFilter oauth2ClientContextFilter() {
-    return new LaunchAwareOAuth2ClientContextFilter();
-  }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().anyRequest().authenticated()
+                .and()
+                .csrf().disable()
+                .oauth2Login()
+                .authorizationEndpoint()
+                .authorizationRequestResolver(new CustomAuthorizationRequestResolver(this.clientRegistrationRepository))
+                .and()
+                .tokenEndpoint()
+                .accessTokenResponseClient(this.smartOnFhirAccessTokenResponseClient);
+    }
 
 }

@@ -18,9 +18,4 @@ public class FhirConfig {
     return context.newJsonParser().setPrettyPrint(true);
   }
 
-  @Bean
-  public IParser iParser() {
-    return fhirContext().newJsonParser().setPrettyPrint(true);
-  }
-
 }
