@@ -1,5 +1,7 @@
 package org.hl7.davinci.alerts.refimpl.sender.config;
 
+import com.healthlx.smartonfhir.core.SmartOnFhirAccessTokenResponseClient;
+import com.healthlx.smartonfhir.core.SmartOnFhirAuthRequestResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .oauth2Login()
                 .authorizationEndpoint()
-                .authorizationRequestResolver(new CustomAuthorizationRequestResolver(this.clientRegistrationRepository))
+                .authorizationRequestResolver(new SmartOnFhirAuthRequestResolver(this.clientRegistrationRepository))
                 .and()
                 .tokenEndpoint()
                 .accessTokenResponseClient(this.smartOnFhirAccessTokenResponseClient);
