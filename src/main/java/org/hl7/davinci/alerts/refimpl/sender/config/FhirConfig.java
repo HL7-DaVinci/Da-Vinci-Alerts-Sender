@@ -22,15 +22,4 @@ public class FhirConfig {
     return FhirContext.forR4();
   }
 
-  //todo move to plugin component
-  @Bean
-  public SmartOnFhirAccessTokenResponseClient smartOnFhirAccessTokenResponseClient(SmartOnFhirContext context){
-    return new SmartOnFhirAccessTokenResponseClient(context);
-  }
-
-  @Bean
-  SmartOnFhirContext smartOnFhirContext(HttpSession session){
-    return new SmartOnFhirContext(session);
-  }
-
 }
