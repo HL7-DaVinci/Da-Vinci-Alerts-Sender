@@ -1,5 +1,1 @@
 rootProject.name = 'sender'
-
-include ':smart-on-fhir'
-
-project(':smart-on-fhir').projectDir = new File('../smart-on-fhir/core')

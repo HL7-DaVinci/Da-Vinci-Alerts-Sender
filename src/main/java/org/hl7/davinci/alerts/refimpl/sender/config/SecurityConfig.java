@@ -1,6 +1,7 @@
 package org.hl7.davinci.alerts.refimpl.sender.config;
 
 import com.healthlx.smartonfhir.core.SmartOnFhirAccessTokenResponseClient;
+import com.healthlx.smartonfhir.config.EnableSmartOnFhir;
 import com.healthlx.smartonfhir.core.SmartOnFhirAuthRequestResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 
 @Configuration
 @EnableWebSecurity
+@EnableSmartOnFhir
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
