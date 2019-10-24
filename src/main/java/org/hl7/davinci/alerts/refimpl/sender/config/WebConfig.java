@@ -13,8 +13,12 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+  private final CurrentContextArgumentResolver currentContextArgumentResolver;
+
   @Autowired
-  private CurrentContextArgumentResolver currentContextArgumentResolver;
+  public WebConfig(CurrentContextArgumentResolver currentContextArgumentResolver) {
+    this.currentContextArgumentResolver = currentContextArgumentResolver;
+  }
 
   @Override
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
