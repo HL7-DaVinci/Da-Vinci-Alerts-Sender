@@ -1,6 +1,16 @@
+FROM openjdk:8-jdk-slim as BUILD
+
+COPY *.gradle gradle.* gradlew /src/
+COPY gradle /src/gradle
+WORKDIR /src
+RUN ./gradlew --version
+
+COPY . .
+RUN ./gradlew build
+
 FROM openjdk:8-jre-alpine
 
-COPY ./build/libs/sender-*.jar /service.jar
+COPY --from=BUILD /src/build/libs/sender-*.jar /service.jar
 
 COPY ./docker-entrypoint.sh /
 
