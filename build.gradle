@@ -6,7 +6,7 @@ plugins {
 repositories {
     mavenCentral()
     maven {
-        url 'https://www.jitpack.io'
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
 }
 
@@ -27,7 +27,7 @@ dependencies {
     compile "org.springframework.security:spring-security-web:5.2.0.RELEASE"
     compile "org.springframework.security:spring-security-config:5.2.0.RELEASE"
 
-    implementation 'com.github.HealthLX.smart-on-fhir:config:0.1.0'
+    implementation 'com.healthlx.smartonfhir:config:0.2.1-SNAPSHOT'
     
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools:2.1.4.RELEASE'
@@ -49,7 +49,7 @@ targetCompatibility = '1.8'
 task resolveDependencies(group: "build setup", description: "Resolve and prefetch dependencies") {
     doLast {
         def resolve = {
-            ConfigurationContainer configurations ->
+            ConfigurationContainer configurations ->І
                 configurations
                         .findAll({ Configuration c -> c.isCanBeResolved() })
                         .each({ c -> c.resolve() })
