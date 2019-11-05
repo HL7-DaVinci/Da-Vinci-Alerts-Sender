@@ -1,8 +1,8 @@
 ehr:
   fhir-server-uri: https://api.logicahealth.org/DaVinciAlertsEHR/data
 
-receiverApp: https://alert-receiver.herokuapp.com/
-receiverUrl: https://alert-receiver.herokuapp.com/fhir
+receiverApp: https://davinci-alerts-receiver.logicahealth.org/
+receiverUrl: https://davinci-alerts-receiver.logicahealth.org/fhir
 
 spring:
   security:
