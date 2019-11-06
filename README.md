@@ -1,5 +1,8 @@
 Da Vinci FHIR Alerts Sender
 ===============
+[![Build Status](https://travis-ci.org/HL7-DaVinci/Da-Vinci-Alerts-Sender.svg?branch=master)](https://travis-ci.org/HL7-DaVinci/Da-Vinci-Alerts-Sender)
+
+
 Da Vinci reference implementations for the Alerts use case (sender).
 
 A Smart-on-FHIR App that tightly integrates with HSPC ecosystem.
