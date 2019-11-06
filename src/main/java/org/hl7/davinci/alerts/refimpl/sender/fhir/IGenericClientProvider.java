@@ -4,25 +4,40 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IClientInterceptor;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
-import org.hl7.davinci.alerts.refimpl.sender.oauth2.context.OAuth2ClientContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.stereotype.Component;
 
 @Component
 public class IGenericClientProvider {
 
+  private OAuth2AuthorizedClientService authorizedClientService;
+
   private final FhirContext fhirContext;
   private final String fhirServerUri;
 
-  public IGenericClientProvider(@Autowired FhirContext fhirContext,
+  @Autowired
+  public IGenericClientProvider(OAuth2AuthorizedClientService authorizedClientService, FhirContext fhirContext,
       @Value("${ehr.fhir-server-uri}") String fhirServerUri) {
+    this.authorizedClientService = authorizedClientService;
     this.fhirContext = fhirContext;
     this.fhirServerUri = fhirServerUri;
   }
 
   public IGenericClient client() {
-    return client(fhirServerUri, OAuth2ClientContextHolder.currentContext().getAccessToken().getValue());
+    Authentication authentication = SecurityContextHolder.getContext()
+        .getAuthentication();
+    OAuth2AuthorizedClient authorizedClient = this.authorizedClientService.loadAuthorizedClient("ehr-client",
+        authentication.getName());
+
+    OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
+
+    return client(fhirServerUri, accessToken.getTokenValue());
   }
 
   public IGenericClient client(String fhiServerUri, String accessToken) {
@@ -33,4 +48,5 @@ public class IGenericClientProvider {
     }
     return client;
   }
+
 }
