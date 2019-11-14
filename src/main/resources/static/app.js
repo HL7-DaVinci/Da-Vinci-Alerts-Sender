@@ -27,16 +27,12 @@
 						patient: {},
 						events: [],
 						eventId: undefined,
-						channelTypes: [],
-						channelTypeId: undefined,
+						channelType: undefined,
 						receiverUrl: null
 					},
 					rules: {
 						eventId: [
 							{ required: true, message: 'Please select event', trigger: 'change' }
-						],
-						channelTypeId: [
-						    { required: true, message: 'Please select channel', trigger: 'change' }
 						]
 					}
 				};
@@ -53,7 +49,7 @@
 			},
 			methods: {
 				onChange() {
-                    if( this.context.channelTypeId && this.context.eventId && this.context.receiverUrl){
+                    if(this.context.eventId && this.context.receiverUrl){
                         this.query("/preview",response => {
                             this.preview.text = response.data;
                             this.preview.loaded = true;
@@ -74,7 +70,7 @@
                     var alertRequest = {
                         patientId : this.context.patient.id,
                         eventId: this.context.eventId,
-                        channelType: this.context.channelTypeId,
+                        channelType: this.context.channelType,
                         receiverUrl: this.context.receiverUrl
                     };
                     axios.post(url, alertRequest)

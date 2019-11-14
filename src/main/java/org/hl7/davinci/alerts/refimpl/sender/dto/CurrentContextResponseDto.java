@@ -23,7 +23,7 @@ public class CurrentContextResponseDto {
   private PatientResponseDto patient;
   private List<EventDto> events;
 
-  private List<ChannelTypeDto> channelTypes;
+  private String channelType;
 
   public CurrentContextResponseDto(Patient patient) {
     Assert.notNull(patient, "Patient cannot be null");
@@ -44,8 +44,7 @@ public class CurrentContextResponseDto {
         new EventDto(AlertType.ADMIT_AMBULATORY, "Alert Admit Ambulatory"),
         new EventDto(AlertType.DISCHARGE, "Alert Discharge"));
 
-    this.channelTypes = Collections.singletonList(
-        new ChannelTypeDto("process-message", "FHIR Messaging ($process-message)"));
+    this.channelType = "FHIR Messaging ($process-message)";
   }
 
   @Data

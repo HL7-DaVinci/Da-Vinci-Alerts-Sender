@@ -59,13 +59,8 @@
 							</el-select>
 						</el-form-item>
 
-						<el-form-item label="Channel type" prop="channelTypeId">
-							<el-select v-model="context.channelTypeId" @change="onChange">
-								<el-option
-										v-for="channelType in context.channelTypes"
-										:label="channelType.name"
-										:value="channelType.id"></el-option>
-							</el-select>
+						<el-form-item label="Channel type" prop="channelType">
+							<el-input v-model="context.channelType" :readonly="true"></el-input>
 						</el-form-item>
 
 						<el-form-item label="Receiver server">
