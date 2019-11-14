@@ -3,8 +3,6 @@ FROM openjdk:8-jdk-slim AS builder
 COPY *.gradle gradle.* gradlew /src/
 COPY gradle /src/gradle
 WORKDIR /src
-RUN ./gradlew resolveDependencies
-
 COPY . .
 RUN ./gradlew build
 
