@@ -12,6 +12,7 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,21 +38,18 @@ public class CurrentContextResponseDto {
         yob -> this.patient.setAge(LocalDate.now().getYear() - yob)
     );
 
-    this.events = Arrays.asList(
-            new EventDto(AlertType.ADMIT_ER,"Alert Admit ER"),
-            new EventDto(AlertType.ADMIT_INPATIENT,"Alert Admit Inpatient"),
-            new EventDto(AlertType.ADMIT_FOROBSERVATION,"Alert Admit for Observation"),
-            new EventDto(AlertType.ADMIT_AMBULATORY,"Alert Admit Ambulatory"),
-            new EventDto(AlertType.DISCHARGE,"Alert Discharge")
-    );
-    this.channelTypes = Arrays.asList(
-            new ChannelTypeDto("notify","Notification ($notify)"),
-            new ChannelTypeDto("process-message","FHIR Messaging ($process-message)")
-    );
+    this.events = Arrays.asList(new EventDto(AlertType.ADMIT_ER, "Alert Admit ER"),
+        new EventDto(AlertType.ADMIT_INPATIENT, "Alert Admit Inpatient"),
+        new EventDto(AlertType.ADMIT_FOROBSERVATION, "Alert Admit for Observation"),
+        new EventDto(AlertType.ADMIT_AMBULATORY, "Alert Admit Ambulatory"),
+        new EventDto(AlertType.DISCHARGE, "Alert Discharge"));
+
+    this.channelTypes = Collections.singletonList(
+        new ChannelTypeDto("process-message", "FHIR Messaging ($process-message)"));
   }
 
   @Data
-  public class PatientResponseDto {
+  private class PatientResponseDto {
     private String id;
     private String name;
     private String gender;

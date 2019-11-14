@@ -6,10 +6,6 @@ import org.hl7.fhir.r4.model.Patient;
 
 public interface MessageCreator {
 
-    //String getType();
-
-    Parameters createNotifyOperation(Patient patient);
-
     Bundle createMessageBundle(Patient patient);
 
 }

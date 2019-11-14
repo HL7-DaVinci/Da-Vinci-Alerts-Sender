@@ -28,7 +28,7 @@ public class EHRService {
     return new CurrentContextResponseDto(patient);
   }
 
-  public Patient getPatient(String patientId) {
+  Patient getPatient(String patientId) {
     IGenericClient client = clientProvider.client();
     return client.read().resource(Patient.class).withId(patientId).execute();
   }

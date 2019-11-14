@@ -7,14 +7,6 @@ import org.springframework.stereotype.Component;
 @Component(AlertType.ADMIT_INPATIENT)
 public class AdmitImpatientCreator extends BaseMessageCreator {
 
-    public Parameters createNotifyOperation(Patient patient) {
-        return createDemoNotifyParams(
-                patient,
-                "IMP", "impatient encounter",
-                getTopic(AlertType.ADMIT_INPATIENT, "Alert Admit Inpatient")
-        );
-    }
-
     public Bundle createMessageBundle(Patient patient) {
         return createDemoProcessMessage(
                 patient,

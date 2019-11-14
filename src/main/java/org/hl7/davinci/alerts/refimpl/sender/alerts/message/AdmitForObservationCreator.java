@@ -1,21 +1,12 @@
 package org.hl7.davinci.alerts.refimpl.sender.alerts.message;
 
 import org.hl7.davinci.alerts.refimpl.sender.alerts.AlertType;
-import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Patient;
 import org.springframework.stereotype.Component;
 
 @Component(value = AlertType.ADMIT_FOROBSERVATION)
 public class AdmitForObservationCreator extends BaseMessageCreator {
-
-    public Parameters createNotifyOperation(Patient patient) {
-        return createDemoNotifyParams(
-                patient,
-                "OBSENC", "observation encounter",
-                getTopic(AlertType.ADMIT_FOROBSERVATION, "Alert Admit for Observation")
-        );
-    }
-
-
 
     public Bundle createMessageBundle(Patient patient) {
         return createDemoProcessMessage(
