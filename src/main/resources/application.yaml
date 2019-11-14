@@ -10,7 +10,7 @@ spring:
       client:
         registration:
           ehr-client:
-            client-id: 87cb1aaf-f6ad-4bec-aeea-ac6a03fff71d
+            client-id: e2c2614b-1df4-465f-9c72-2f23700e63de
             client-name: Alert Sender
             provider: ehr-provider
             redirect-uri: "{baseUrl}/login/oauth2/code/ehr-client"
