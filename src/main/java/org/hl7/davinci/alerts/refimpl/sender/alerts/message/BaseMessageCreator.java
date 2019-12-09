@@ -37,7 +37,6 @@ abstract class BaseMessageCreator implements MessageCreator {
                         )
                         .setEndpoint("llp:10.11.12.13:5432")
                 )
-                //todo add message definition and structure elements better.
                 .setFocus(Collections.singletonList(new Reference(encounter)));
 
         bundle.addEntry().setResource(header)
