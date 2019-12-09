@@ -34,7 +34,7 @@ public class AlertService {
     Patient patient = ehrService.getPatient(alertRequestDto.getPatientId());
     MessageCreator messageCreator = messageCreatorMap.get(alertRequestDto.getEventId());
     Bundle bundle = messageCreator.createMessageBundle(patient);
-    return fhirMessageService.sendMessage(bundle, alertRequestDto.getReceiverUrl());
+    return parser.encodeResourceToString(fhirMessageService.sendMessage(bundle, alertRequestDto.getReceiverUrl()));
   }
 
   public String previewAlert(AlertRequestDto alertRequestDto) {
