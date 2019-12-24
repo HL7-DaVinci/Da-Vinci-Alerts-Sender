@@ -25,13 +25,15 @@
 					},
 					context: {
 						patient: {},
-						events: [],
-						eventId: undefined,
+						existingEvents: [],
+						generateEventTypes: [],
+						generateEventType: undefined,
+						existingEventId: undefined,
 						channelType: undefined,
 						receiverUrl: null
 					},
 					rules: {
-						eventId: [
+						generateEventType: [
 							{ required: true, message: 'Please select event', trigger: 'change' }
 						]
 					}
@@ -49,7 +51,7 @@
 			},
 			methods: {
 				onChange() {
-                    if(this.context.eventId && this.context.receiverUrl){
+                    if(this.context.generateEventType && this.context.receiverUrl){
                         this.query("/preview",response => {
                             this.preview.text = response.data;
                             this.preview.loaded = true;
@@ -69,7 +71,7 @@
                     this.loading = true;
                     var alertRequest = {
                         patientId : this.context.patient.id,
-                        eventId: this.context.eventId,
+                        generateEventType: this.context.generateEventType,
                         channelType: this.context.channelType,
                         receiverUrl: this.context.receiverUrl
                     };
