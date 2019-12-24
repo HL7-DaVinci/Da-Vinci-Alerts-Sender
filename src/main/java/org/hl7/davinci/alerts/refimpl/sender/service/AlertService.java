@@ -32,14 +32,14 @@ public class AlertService {
 
   public String sendAlert(AlertRequestDto alertRequestDto) {
     Patient patient = ehrService.getPatient(alertRequestDto.getPatientId());
-    MessageCreator messageCreator = messageCreatorMap.get(alertRequestDto.getEventId());
+    MessageCreator messageCreator = messageCreatorMap.get(alertRequestDto.getGenerateEventType());
     Bundle bundle = messageCreator.createMessageBundle(patient);
     return parser.encodeResourceToString(fhirMessageService.sendMessage(bundle, alertRequestDto.getReceiverUrl()));
   }
 
   public String previewAlert(AlertRequestDto alertRequestDto) {
     Patient patient = ehrService.getPatient(alertRequestDto.getPatientId());
-    MessageCreator messageCreator = messageCreatorMap.get(alertRequestDto.getEventId());
+    MessageCreator messageCreator = messageCreatorMap.get(alertRequestDto.getGenerateEventType());
     return parser.encodeResourceToString(messageCreator.createMessageBundle(patient));
   }
 

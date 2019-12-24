@@ -5,7 +5,10 @@ import lombok.Data;
 @Data
 public class AlertRequestDto {
     private String patientId;
-    private String eventId;
+
+    private String generateEventType;
+    private String existingEventId;
+
     private String channelType;
     private String receiverUrl;
 }
