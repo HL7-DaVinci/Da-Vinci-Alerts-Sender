@@ -57,13 +57,31 @@
 				});
 			},
 			methods: {
-				onChange() {
-                    if(this.context.generateEventType && this.context.receiverUrl){
-                        this.query("/preview",response => {
-                            this.preview.text = response.data;
-                            this.preview.loaded = true;
-                        })
-                    }
+				onEventChange() {
+					if (!this.context.receiverUrl) {
+						return;
+					}
+
+					this.showPreview();
+				},
+				onEventTypeChange() {
+					this.showPreview();
+				},
+				showPreview() {
+					if (this.context.eventType === "Generate event" && this.context.generateEventType ||
+						this.context.eventType === "Existing event" && this.context.existingEventId) {
+						this.loading = true;
+						axios.post("/preview", this.preparedData())
+							.then(response => {
+								this.preview.text = response.data;
+								this.preview.loaded = true;
+							})
+							.catch(error => {
+								this.$message.error(errorMessage(error.response.data.message));
+							}).finally(() => {
+							this.loading = false;
+						});
+					}
 				},
 				submitForm() {
 				    this.$refs.patientForm.validate(valid => {
@@ -74,23 +92,22 @@
                         }
 				    })
 				},
-				query(url, handler){
-                    this.loading = true;
-                    var alertRequest = {
-                        patientId : this.context.patient.id,
-                        generateEventType: this.context.generateEventType,
-                        channelType: this.context.channelType,
-                        receiverUrl: this.context.receiverUrl
-                    };
-                    axios.post(url, alertRequest)
-                        .then(handler)
-                        .catch(error => {
-                            this.$message.error(errorMessage(error.response.data.message));
-                        }).finally(() => {
-                            this.loading = false;
-                        })
-                }
-            }
+				preparedData() {
+					let alertRequest = {
+						patientId: this.context.patient.id,
+						channelType: this.context.channelType,
+						receiverUrl: this.context.receiverUrl
+					};
+
+					if (this.context.eventType === "Generate event") {
+						alertRequest.generateEventType = this.context.generateEventType;
+					} else if (this.context.eventType === "Existing event") {
+						alertRequest.existingEventId = this.context.existingEventId;
+					}
+
+					return alertRequest;
+				}
+			}
 		});
 
 		var router = new VueRouter({
