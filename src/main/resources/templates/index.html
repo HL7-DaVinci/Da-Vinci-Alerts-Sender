@@ -50,6 +50,19 @@
 							<el-input v-model="context.patient.name" :readonly="true"></el-input>
 						</el-form-item>
 
+						<el-form-item label="Event type" prop="eventType">
+							<el-select v-model="context.eventType">
+								<el-option
+										label="Generate event"
+										value="Generate event"
+								></el-option>
+								<el-option
+										label="Existing event"
+										value="Existing event">
+								</el-option>
+							</el-select>
+						</el-form-item>
+
 						<el-form-item label="Generate event" prop="generateEventType">
 							<el-select v-model="context.generateEventType" @change="onChange">
 								<el-option

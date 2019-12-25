@@ -29,6 +29,7 @@
 						generateEventTypes: [],
 						generateEventType: undefined,
 						existingEventId: undefined,
+						eventType: undefined,
 						channelType: undefined,
 						receiverUrl: null
 					},
