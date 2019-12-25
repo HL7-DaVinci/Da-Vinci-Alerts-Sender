@@ -36,6 +36,12 @@
 					rules: {
 						generateEventType: [
 							{ required: true, message: 'Please select event', trigger: 'change' }
+						],
+						existingEventId: [
+							{ required: true, message: 'Please select event', trigger: 'change' }
+						],
+						eventType: [
+							{ required: true, message: 'Please select event type', trigger: 'change' }
 						]
 					}
 				};
