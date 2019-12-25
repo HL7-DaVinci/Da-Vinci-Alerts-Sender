@@ -51,7 +51,7 @@
 						</el-form-item>
 
 						<el-form-item label="Event type" prop="eventType">
-							<el-select v-model="context.eventType">
+							<el-select v-model="context.eventType" @change="onEventTypeChange">
 								<el-option
 										label="Generate event"
 										value="Generate event"
@@ -64,7 +64,7 @@
 						</el-form-item>
 
 						<el-form-item label="Generate event" prop="generateEventType" v-if="context.eventType === 'Generate event'">
-							<el-select v-model="context.generateEventType" @change="onChange">
+							<el-select v-model="context.generateEventType" @change="onEventChange">
 								<el-option
 										v-for="event in context.generateEventTypes"
 										:label="event.name"
@@ -73,7 +73,7 @@
 						</el-form-item>
 
 						<el-form-item label="Existing event" prop="existingEventId" v-if="context.eventType === 'Existing event'">
-							<el-select v-model="context.existingEventId" @change="onChange">
+							<el-select v-model="context.existingEventId" @change="onEventChange">
 								<el-option
 										v-for="event in context.existingEvents"
 										:label="event.name"
