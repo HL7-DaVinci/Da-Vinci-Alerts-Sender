@@ -55,11 +55,13 @@
 								<el-option
 										label="Generate event"
 										value="Generate event"
+										:disabled="!context.generateEventTypes.length"
 								></el-option>
 								<el-option
 										label="Existing event"
-										value="Existing event">
-								</el-option>
+										value="Existing event"
+										:disabled="!context.existingEvents.length"
+								></el-option>
 							</el-select>
 						</el-form-item>
 
