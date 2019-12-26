@@ -11,8 +11,7 @@ public class AdmitImpatientCreator extends BaseMessageCreator {
         return createDemoProcessMessage(
                 patient,
                 "IMP",
-                "impatient encounter",
-                getTopic(AlertType.ADMIT_INPATIENT, "Alert Admit Inpatient").getCodingFirstRep()
+                "impatient encounter"
         );
     }
 }

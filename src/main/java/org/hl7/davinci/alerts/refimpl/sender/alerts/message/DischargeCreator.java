@@ -1,10 +1,11 @@
 package org.hl7.davinci.alerts.refimpl.sender.alerts.message;
 
 import org.hl7.davinci.alerts.refimpl.sender.alerts.AlertType;
+import org.hl7.davinci.alerts.refimpl.sender.alerts.message.config.EncounterToNotificationEventConfig;
+import org.hl7.davinci.alerts.refimpl.sender.alerts.message.config.SampleMessageCreatorUtil;
 import org.hl7.fhir.r4.model.*;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
@@ -19,7 +20,7 @@ public class DischargeCreator extends BaseMessageCreator {
 
         Encounter encounter = getDischargeEncounter(patient);
         MessageHeader header = new MessageHeader()
-                .setEvent(getTopic(AlertType.DISCHARGE, "Alert Discharge").getCodingFirstRep())
+                .setEvent(EncounterToNotificationEventConfig.eventCodingForEncounter(encounter))
                 .setFocus(Collections.singletonList(new Reference(encounter)));
 
         bundle.addEntry().setResource(header)

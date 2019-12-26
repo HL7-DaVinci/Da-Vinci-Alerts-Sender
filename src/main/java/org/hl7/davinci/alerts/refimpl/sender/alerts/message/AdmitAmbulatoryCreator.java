@@ -13,8 +13,7 @@ public class AdmitAmbulatoryCreator extends BaseMessageCreator {
         return createDemoProcessMessage(
                 patient,
                 "AMB",
-                "ambulatory",
-                getTopic(AlertType.ADMIT_AMBULATORY, "Alert Admit Ambulatory").getCodingFirstRep()
+                "ambulatory"
         );
     }
 }

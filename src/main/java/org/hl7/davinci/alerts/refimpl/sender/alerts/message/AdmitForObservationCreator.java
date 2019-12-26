@@ -12,8 +12,7 @@ public class AdmitForObservationCreator extends BaseMessageCreator {
         return createDemoProcessMessage(
                 patient,
                 "OBSENC",
-                "observation encounter",
-                getTopic(AlertType.ADMIT_FOROBSERVATION, "Alert Admit for Observation").getCodingFirstRep()
+                "observation encounter"
         );
     }
 }
