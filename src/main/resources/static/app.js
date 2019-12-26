@@ -66,40 +66,36 @@
 				showPreview() {
 					if (this.context.eventType === "Generate event" && this.context.generateEventType ||
 						this.context.eventType === "Existing event" && this.context.existingEventId) {
-						 this.query("/preview", response => {
-               this.preview.text = response.data;
-               this.preview.loaded = true;
-             });
+						this.query("/preview", response => {
+							this.preview.text = response.data;
+							this.preview.loaded = true;
+						});
 					} else {
-					    this.preview.text = '';
-					    this.preview.loaded= false;
-              this.preview.collapse=false;
+						this.preview.text = '';
+						this.preview.loaded = false;
+						this.preview.collapse = false;
 					}
 				},
 				query(url, handler) {
-          this.loading = true;
-          var alertRequest = {
-              patientId : this.context.patient.id,
-              generateEventType: this.context.generateEventType,
-              channelType: this.context.channelType,
-              receiverUrl: this.context.receiverUrl
-            };
-          axios.post(url, this.preparedData())
-              .then(handler)
-              .catch(error => {
-                  this.$message.error(errorMessage(error.response.data.message));
-              }).finally(() => {
-                 this.loading = false;
-              });
-        },
+					this.loading = true;
+					axios.post(url, this.preparedData())
+						.then(handler)
+						.catch(error => {
+							this.$message.error(errorMessage(error.response.data.message));
+						}).finally(() => {
+						this.loading = false;
+					});
+				},
 				submitForm() {
-				    this.$refs.patientForm.validate(valid => {
-                        if (!valid) {
-                            return false;
-                        } else {
-                            this.query("/send-alert",response => { this.$message.success(successMessage(response))});
-                        }
-				    })
+					this.$refs.patientForm.validate(valid => {
+						if (!valid) {
+							return false;
+						} else {
+							this.query("/send-alert", response => {
+								this.$message.success(successMessage(response))
+							});
+						}
+					})
 				},
 				preparedData() {
 					let alertRequest = {
