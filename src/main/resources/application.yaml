@@ -19,8 +19,8 @@ spring:
             scope: 'launch/patient,openid,profile,launch,fhirUser,launch/encounter,patient/Patient.read,patient/*.read,offline_access,patient/Observation.read,patient/*.write,patient/Encounter.read,patient/Observation.write'
         provider:
           ehr-provider:
-            token-uri: https://auth.hspconsortium.org/token
-            authorization-uri: https://auth.hspconsortium.org/authorize
-            user-info-uri: https://auth.hspconsortium.org/userinfo
-            jwk-set-uri: https://auth.hspconsortium.org/jwk
+            token-uri: https://auth.logicahealth.org/token
+            authorization-uri: https://auth.logicahealth.org/authorize
+            user-info-uri: https://auth.logicahealth.org/userinfo
+            jwk-set-uri: https://auth.logicahealth.org/jwk
             userNameAttribute: sub
