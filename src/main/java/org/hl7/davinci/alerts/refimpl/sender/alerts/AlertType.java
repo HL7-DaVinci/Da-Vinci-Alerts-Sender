@@ -6,4 +6,5 @@ public class AlertType {
     public static final String ADMIT_FOROBSERVATION = "alert-admit-forobservation";
     public static final String ADMIT_AMBULATORY = "alert-admit-ambulatory";
     public static final String DISCHARGE = "alert-discharge";
+    public static final String TRANSFER = "alert-transfer";
 }

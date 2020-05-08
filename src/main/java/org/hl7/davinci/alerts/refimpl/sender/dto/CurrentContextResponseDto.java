@@ -49,7 +49,8 @@ public class CurrentContextResponseDto {
         new EventDto(AlertType.ADMIT_INPATIENT, "Alert Admit Inpatient"),
         new EventDto(AlertType.ADMIT_FOROBSERVATION, "Alert Admit for Observation"),
         new EventDto(AlertType.ADMIT_AMBULATORY, "Alert Admit Ambulatory"),
-        new EventDto(AlertType.DISCHARGE, "Alert Discharge"));
+        new EventDto(AlertType.DISCHARGE, "Alert Discharge"),
+        new EventDto(AlertType.TRANSFER, "Alert Transfer"));
 
     this.existingEvents = new ArrayList<>();
     for (Encounter encounter : encountersForPatient) {
