@@ -8,20 +8,28 @@ import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.Coverage;
 import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Endpoint;
+import org.hl7.fhir.r4.model.InstantType;
 import org.hl7.fhir.r4.model.MessageDefinition;
 import org.hl7.fhir.r4.model.MessageHeader;
+import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 
 import java.util.Collections;
+import java.util.UUID;
 
 public class SampleMessageCreatorUtil {
 
   public static Bundle createMessageBundle(Patient patient, Encounter encounter) {
     Bundle bundle = new Bundle();
-    bundle.setType(Bundle.BundleType.TRANSACTION);
+    bundle.setType(Bundle.BundleType.MESSAGE);
+    bundle.setId(UUID.randomUUID().toString());
+    InstantType now = (InstantType) InstantType.now().setTimeZoneZulu(true);
+    bundle.setTimestampElement(now);
+    bundle.setMeta(new Meta().setLastUpdatedElement(now)
+        .addProfile("http://hl7.org/fhir/us/davinci-alerts/StructureDefinition/notifications-bundle"));
 
     MessageHeader header = new MessageHeader()
         .setEvent(EncounterToNotificationEventConfig.eventCodingForEncounter(encounter))
