@@ -30,7 +30,12 @@
 		    align-items: center;
 		}
 
-
+		.download-link {
+			margin-left: 20px;
+			text-decoration: none;
+			padding: 5px 20px;
+			font-size: 12px;
+		}
     </style>
 </head>
 
@@ -101,6 +106,17 @@
 
 			<el-collapse v-if="preview.loaded" v-model="preview.collapse">
 				<el-collapse-item title="Message preview" name="1">
+					<div slot="title">
+						<span>Message preview</span>
+						<a
+							:href="'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(preview.text, 0, 4))"
+							download="message.json"
+							class="el-button download-link"
+							@click.stop
+						>
+							Download
+						</a>
+					</div>
 					<div style="overflow-x:scroll;"><pre>{{ preview.text }}</pre></div>
 				</el-collapse-item>
 			</el-collapse>
